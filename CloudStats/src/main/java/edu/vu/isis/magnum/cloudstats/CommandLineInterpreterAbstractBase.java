@@ -14,10 +14,6 @@ import org.apache.commons.cli.PosixParser;
 
 public abstract class CommandLineInterpreterAbstractBase {
 
-	/*
-	 * Required Methods
-	 */
-
 	/**
 	 * This sets the output format to 80 character width
 	 */
@@ -33,19 +29,19 @@ public abstract class CommandLineInterpreterAbstractBase {
 
 	// The Command entered at runtime
 	private CommandLine cmd;
-
-	private static int helpOutputWidth = 80;
+	// options for help output
 	private static int helpLeftPad = 0;
 	private static int helpDescPad = 10;
+	private static int helpOutputWidth = 80;
 
 	/**
-	 * Set the Output Width of the Help message.
+	 * Set the Output Description Padding of the Help message.
 	 * 
 	 * @param helpOutputWidth
-	 *           the width size
+	 *           the description padding size
 	 */
-	public static void setHelpOutputWidth(int helpOutputWidth) {
-		CommandLineInterpreterAbstractBase.helpOutputWidth = helpOutputWidth;
+	public static void setHelpDescPad(int helpDescPad) {
+		CommandLineInterpreterAbstractBase.helpDescPad = helpDescPad;
 	}
 
 	/**
@@ -58,23 +54,26 @@ public abstract class CommandLineInterpreterAbstractBase {
 		CommandLineInterpreterAbstractBase.helpLeftPad = helpLeftPad;
 	}
 
-	/**
-	 * Set the Output Description Padding of the Help message.
-	 * 
-	 * @param helpOutputWidth
-	 *           the description padding size
-	 */
-	public static void setHelpDescPad(int helpDescPad) {
-		CommandLineInterpreterAbstractBase.helpDescPad = helpDescPad;
-	}
-
+	// maps for
 	private HashMap<String, String> parameterArguements = new HashMap<String, String>();
-	private HashMap<String, Boolean> hasParameter = new HashMap<String, Boolean>();
-	private HashMap<String, Boolean> hasOption = new HashMap<String, Boolean>();
 	private HashMap<String, String> optionPossibilities = new HashMap<String, String>();
 
+	private HashMap<String, Boolean> hasParameter = new HashMap<String, Boolean>();
+	private HashMap<String, Boolean> hasOption = new HashMap<String, Boolean>();
+
 	private boolean addHelpOption = true;
+
 	static String helpOptionName = "help";
+
+	/**
+	 * Set the Output Width of the Help message.
+	 * 
+	 * @param helpOutputWidth
+	 *           the width size
+	 */
+	public static void setHelpOutputWidth(int helpOutputWidth) {
+		CommandLineInterpreterAbstractBase.helpOutputWidth = helpOutputWidth;
+	}
 
 	/**
 	 * Abstract CreateOptionsList requirement
@@ -141,6 +140,14 @@ public abstract class CommandLineInterpreterAbstractBase {
 		}
 	}
 
+	public final boolean hasOption(String option) {
+		if (optionPossibilities.containsKey(option)) {
+			return hasOption.get(optionPossibilities.get(option));
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * If the option provided has a parameter
 	 * 
@@ -151,14 +158,6 @@ public abstract class CommandLineInterpreterAbstractBase {
 	public final boolean hasParameter(String option) {
 		if (optionPossibilities.containsKey(option)) {
 			return hasParameter.get(optionPossibilities.get(option));
-		} else {
-			return false;
-		}
-	}
-
-	public final boolean hasOption(String option) {
-		if (optionPossibilities.containsKey(option)) {
-			return hasOption.get(optionPossibilities.get(option));
 		} else {
 			return false;
 		}
